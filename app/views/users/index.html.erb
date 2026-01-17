@@ -1,0 +1,10 @@
+<h1> <%=pluralize(@users.size, "User") %></h1>
+<ul class="users">
+	<% @users.each do |u| %>
+		<li>
+			<%= link_to  u.name, user_path(u), class: "button"  %>
+			created
+			<%= time_ago_in_words(u.created_at) %> ago
+			</li>
+		<% end %>
+</ul>
