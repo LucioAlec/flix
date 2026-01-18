@@ -1,31 +1,31 @@
 class ReviewsController < ApplicationController
-	before_action :set_movie
-	def index
-		@reviews = @movie.reviews
-	end
+  before_action :set_movie
+  def index
+    @reviews = @movie.reviews
+  end
 
-	def new
-		@review = @movie.reviews.new
-	end
+  def new
+    @review = @movie.reviews.new
+  end
 
-	def create
-		@review = @movie.reviews.new(review_params)
-		
-		if @review.save
-			redirect_to movie_reviews_path(@movie),
-									notice: "Thanks for your review!"
-		else
-			render :new, status: :unprocessable_entity
-		end
-	end
+  def create
+    @review = @movie.reviews.new(review_params)
 
-	def destroy
-		review = @movie.reviews.find(params[:id])
-		review.destroy
-		redirect_to movie_reviews_path(@movie), status: :see_other, alert:"Review Deleted!"
-	end
+    if @review.save
+      redirect_to movie_reviews_path(@movie),
+                  notice: "Thanks for your review!"
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
 
-	def edit
+  def destroy
+    review = @movie.reviews.find(params[:id])
+    review.destroy
+    redirect_to movie_reviews_path(@movie), status: :see_other, alert: "Review Deleted!"
+  end
+
+  def edit
   @review = @movie.reviews.find(params[:id])
 end
 
@@ -39,14 +39,13 @@ def update
 end
 
 
-	private 
+  private
 
-	def review_params
-		params.require(:review).permit(:name, :comment, :stars)
-	end
+  def review_params
+    params.require(:review).permit(:name, :comment, :stars)
+  end
 
-	def set_movie
-		@movie = Movie.find(params[:movie_id])
-	end
-
+  def set_movie
+    @movie = Movie.find(params[:movie_id])
+  end
 end

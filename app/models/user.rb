@@ -3,11 +3,10 @@ class User < ApplicationRecord
 
   validates :name, presence: true
 
-  validates :email, format: {with: /\S+@\S+/ }, uniqueness:{case_sensitive: false}
+  validates :email, format: { with: /\A#{URI::MailTo::EMAIL_REGEXP}\z/ }, uniqueness: { case_sensitive: false }
   validates :password, length: { minimum: 10, allow_blank: true }
 
   def gravatar_id
-    Digest::MD5::hexdigest(email.downcase)
+    Digest::MD5.hexdigest(email.downcase)
   end
-
 end
