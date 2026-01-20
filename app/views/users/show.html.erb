@@ -1,9 +1,18 @@
 <section class="user">
 	<%= profile_image(@user) %>
 	<h1><%=@user.name %></h1>
+	<h2><%=@user.username %></h1>
 	<h2><%= mail_to(@user.email) %> </h2>
 	<h4>Member since </h3>
 	<p>
 	<%= @user.created_at.strftime("%B %Y") %>
 	</p>
+
+	<div class= "actions">
+		<%= link_to "Edit Account", edit_user_path(@user),	
+												class: "button edit" %>
+<%= link_to "Delete Account",
+            @user, class: "button delete",
+            data:{turbo_method: :delete, turbo_confirm: "Sure?"} %>
+		</div>
 </section>
