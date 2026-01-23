@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   get "movies/:id/edit"=> "movies#edit", as: "edit_movie"
   patch "movies/:id" => "movies#update"
 =end
+resource :session, only: [ :new, :create, :destroy ]
 resources :users
+get "signin" =>"sessions#new"
 get "signup" =>"users#new"
 end
