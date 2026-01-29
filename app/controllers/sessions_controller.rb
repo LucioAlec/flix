@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    session[:user_id] = nil
+    reset_session
     redirect_to movies_url, status: :see_other,
     alert: "You're now signed out!"
   end
