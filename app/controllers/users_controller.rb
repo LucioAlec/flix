@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :require_signin, except: [ :new, :create ]
+  before_action :require_correct_user, only: [ :edit, :update, :destroy ]
 
   def index
     @users = User.all
@@ -22,12 +23,9 @@ class UsersController < ApplicationController
   end
 
 
-  def edit
-    @user = User.find(params[:id])
-  end
+  def edit ; end
 
   def update
-    @user = User.find(params[:id])
     if @user.update(user_params)
       redirect_to @user, notice: "Account successfully updated!"
     else
@@ -36,7 +34,6 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    @user = User.find(params[:id])
     @user.destroy
     reset_session
       redirect_to movies_url, status: :see_other,
@@ -48,5 +45,10 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).
         permit(:name, :username, :email, :password, :password_confirmation)
+    end
+
+    def require_correct_user
+      @user = User.find(params[:id])
+      redirect_to root_url, status: :see_other unless current_user?(@user)
     end
 end
