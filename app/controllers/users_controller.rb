@@ -1,13 +1,16 @@
 class UsersController < ApplicationController
   before_action :require_signin, except: [ :new, :create ]
-  before_action :require_correct_user, only: [ :edit, :update, :destroy ]
+  before_action :set_user, only: [ :show, :edit, :update, :destroy ]
+  before_action :require_correct_user, only: [ :edit, :update ]
+  before_action :require_admin, only: [ :index ]
+  before_action :require_admin_or_current_user, only: [ :destroy ]
 
   def index
     @users = User.all
   end
-  def show
-    @user = User.find(params[:id])
-  end
+
+  def show ; end
+
   def new
     @user = User.new
   end
@@ -34,10 +37,15 @@ class UsersController < ApplicationController
   end
 
   def destroy
+    deleting_self = current_user?(@user)
     @user.destroy
-    reset_session
-      redirect_to movies_url, status: :see_other,
-        alert: "Account sucessfully delted!"
+    reset_session if deleting_self
+    if deleting_self
+      redirect_to root_url, status: :see_other, notice: "Account successfully deleted!"
+    else
+      redirect_to users_url, status: :see_other,
+      alert: "Account sucessfully deleted!"
+    end
   end
 
 
@@ -48,7 +56,10 @@ class UsersController < ApplicationController
     end
 
     def require_correct_user
-      @user = User.find(params[:id])
       redirect_to root_url, status: :see_other unless current_user?(@user)
+    end
+
+    def set_user
+      @user = User.find(params[:id])
     end
 end
