@@ -8,14 +8,32 @@
 	<%= @user.created_at.strftime("%B %Y") %>
 	</p>
 	<% if current_user_admin? || current_user?(@user) %>
-	<div class= "actions">
-		<%= link_to "Edit Account", edit_user_path(@user),	
+		<div class= "actions">
+			<%= link_to "Edit Account", edit_user_path(@user),	
 												class: "button edit" %>
 
-		<%= link_to "Delete Account",
+			<%= link_to "Delete Account",
 								@user, class: "button delete",
 								data:{turbo_method: :delete, turbo_confirm: "Sure?"} %>
+		</div>
+	<% end %>
+	<% if @reviews.present? %>
+		<h3> Reviews <h3>
+		<% @reviews.each do |r| %>
+			<div class="review">
+				<div class="details">
+					<span class="title">
+					<%=link_to r.movie.title, r.movie %>
+					</span>
+					<%= pluralize(r.stars, 'star') %>
+					<span class="date">
+						<%= time_ago_in_words(r.created_at) %> ago
+					</span>
+					<p>
+						<%= r.comment %>
+					</p>
 				</div>
-
-			<% end %>
+			</div>
+		<% end %>
+	<% end %>
 </section>

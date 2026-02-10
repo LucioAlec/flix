@@ -9,7 +9,9 @@ class UsersController < ApplicationController
     @users = User.all
   end
 
-  def show ; end
+  def show
+    @reviews = @user.reviews
+  end
 
   def new
     @user = User.new
