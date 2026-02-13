@@ -6,7 +6,9 @@ class MoviesController < ApplicationController
   @movies = Movie.all # ["Iron Man", "Superman", "Spider-Man", "Batman"]
   end
 
-  def show ; end
+  def show
+  @fans = @movie.fans
+  end
 
   def edit ; end
 
