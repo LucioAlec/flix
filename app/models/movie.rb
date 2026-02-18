@@ -3,6 +3,8 @@ class Movie < ApplicationRecord
   has_many :critics, through: :reviews, source: :user
   has_many :favorites, dependent: :destroy
   has_many :fans, through: :favorites, source: :user
+  has_many :charecterizations, dependent: :destroy
+  has_many :genres, through: :charecterizations
 
   validates :title, :released_on, :duration, presence: true
   validates :description, length: { minimum: 25 }
@@ -16,7 +18,7 @@ class Movie < ApplicationRecord
 
 
   def self.released
-    where("released_on > ?", Time.now).order(released_on: :desc)
+    where("released_on <= ?", Time.now).order(released_on: :desc)
   end
 
   def flop?
