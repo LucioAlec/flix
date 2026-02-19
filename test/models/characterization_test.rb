@@ -1,6 +1,6 @@
 require "test_helper"
 
-class CharecterizationTest < ActiveSupport::TestCase
+class CharacterizationTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end
