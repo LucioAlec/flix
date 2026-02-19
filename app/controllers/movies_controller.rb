@@ -8,6 +8,7 @@ class MoviesController < ApplicationController
 
   def show
   @fans = @movie.fans
+  @genres = @movie.genres.order(:name)
     if current_user
       @favorite = current_user.favorites.find_by(movie_id: @movie.id)
     end
@@ -46,7 +47,7 @@ class MoviesController < ApplicationController
   def movie_params
     params.require(:movie)
       .permit(:title, :description, :rating,
-               :director, :duration, :image_file_name, :released_on, :total_gross)
+               :director, :duration, :image_file_name, :released_on, :total_gross, genre_ids: [])
   end
 
   def set_movie
