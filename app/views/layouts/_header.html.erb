@@ -4,6 +4,7 @@
     <ul class="left">
       <li>
         <%= link_to "All Movies", movies_path, class: "button" %>
+        <%= link_to "All Genres", genres_path, class: "button" %>
         <% if current_user_admin? %>
         <%= link_to "All Users", users_path, class: "button" %>
         <% end %>

@@ -33,7 +33,8 @@ class MoviesController < ApplicationController
     if @movie.save
     redirect_to @movie
     else
-      render :new, status: :unprocessable_entity, notice: "Movie successfully created!"
+      flash.now[:alert] = "Movie unsuccessfully created!"
+      render :new, status: :unprocessable_entity
     end
   end
 

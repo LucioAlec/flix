@@ -1,0 +1,6 @@
+<%= form_with(model:@genre) do |form| %>
+  <%= form.label :Name %>
+  <%= form.text_field :name %>
+
+  <%= form.submit(@genre.persisted?  ? "Update Genre" : "Create Genre") %>
+  <%end%>

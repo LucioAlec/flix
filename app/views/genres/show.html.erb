@@ -1,0 +1,18 @@
+ <%if @movies.present? %>
+  <ul> 
+    <h2> <%= @genre.name %>'s movies </h2>
+    <% @movies.each do |m| %>
+      <li><%= link_to m.title, m %> </li>
+    <% end %>
+  </ul>
+<%else%>
+    <p>No movies in this genre yet. </p>
+<%end%>
+<% if current_user_admin? %>
+  <section class="admin">
+  <%= link_to "Edit", edit_genre_path, class: "button"%>
+  <%=link_to "Delete", genre_path, class: "button",
+              data:{turbo_method: :delete, turbo_confirm: "Sure?"}%>
+  </section
+  
+<% end %>
