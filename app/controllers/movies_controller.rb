@@ -3,7 +3,7 @@ class MoviesController < ApplicationController
   before_action :require_admin, except: [ :index, :show ]
   before_action :set_movie, only: %i[show edit update destroy]
   def index
-  @movies = Movie.all # ["Iron Man", "Superman", "Spider-Man", "Batman"]
+      @movies = Movie.public_send(movies_filter)
   end
 
   def show
@@ -53,5 +53,16 @@ class MoviesController < ApplicationController
 
   def set_movie
     @movie = Movie.find(params[:id])
+  end
+
+  def movies_filter
+    allowed = %w[released upcoming recent hits flops]
+    filter = params[:filter]
+
+    if filter.in?(allowed)
+      filter
+    else
+    :released
+    end
   end
 end
