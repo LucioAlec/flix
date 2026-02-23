@@ -2,30 +2,17 @@
   <nav>
     <%= link_to image_tag("logo.png"), root_path %>
     <ul class="left">
-      <li>
-        <%= link_to "Released", movies_path, class: "active" %>
-      </li>
-      <li>
-        <%= link_to "Upcoming", filtered_movies_path(:upcoming), class: "active" %>
-      </li>
-      <li>
-        <%= link_to "Recent", filtered_movies_path(:recent), class: "active"%>
-      </li>
-      <li>
-        <%= link_to "Hits", filtered_movies_path(:hits), class: "active"%>
-      </li>
-      <li>
-        <%= link_to "Flops", filtered_movies_path(:flops), class: "active"%>
-      </li>
-      <li>
-        <%= link_to "All Genres", genres_path%>
-      </li>
+      <li>  <%= nav_link_to "Released", movies_path %>  </li>
+      <li>  <%= nav_link_to "Upcoming", filtered_movies_path(:upcoming)%>  </li>
+      <li>  <%= nav_link_to "Recent", filtered_movies_path(:recent)%> </li>
+      <li>  <%= nav_link_to "Hits", filtered_movies_path(:hits)%> </li>
+      <li>  <%= nav_link_to "Flops", filtered_movies_path(:flops)%> </li>
+      <li>  <%= link_to "All Genres", genres_path%> </li>
         <% if current_user_admin? %>
         <%= link_to "All Users", users_path %>
         <% end %>
       </li>
     </ul>
-
     <ul class="right">
     <% if current_user  %>
       <li>
