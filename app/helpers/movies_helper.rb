@@ -7,6 +7,11 @@ module MoviesHelper
     end
   end
 
+  def upcoming_or_total_gross(movie)
+    movie.upcoming? ? "Upcoming..." : total_gross(movie)
+     
+  end
+
   def year_of(movie)
     # movie.released_on.strftime("%Y")
     movie.released_on.year

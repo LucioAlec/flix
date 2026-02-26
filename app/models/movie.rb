@@ -51,6 +51,10 @@ class Movie < ApplicationRecord
   slug
   end
 
+  def upcoming?
+    released_on > Time.current
+  end
+
   private
 
   def acceptable_image
