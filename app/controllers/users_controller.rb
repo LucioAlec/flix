@@ -53,13 +53,15 @@ class UsersController < ApplicationController
 
 
     private
-    def user_params
-      params.require(:user).
-        permit(:name, :username, :email, :password, :password_confirmation)
+    def user_params 
+      allowed =[:name, :username, :email, :password, :password_confirmation]
+      allowed << :admin if current_user&.admin?
+      params.require(:user).permit(*allowed)
+
     end
 
     def require_correct_user
-      redirect_to root_url, status: :see_other unless current_user?(@user)
+      redirect_to root_url, status: :see_other unless current_user?(@user) || current_user.admin?
     end
 
     def set_user

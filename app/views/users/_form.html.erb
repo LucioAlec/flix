@@ -16,6 +16,11 @@
 
 	<%= f.label :password_confirmation, "Confirm Password" %>
 	<%= f.password_field :password_confirmation %>
+
+	<% if !user.new_record? && current_user&.admin? %>
+	<%= f.label :admin, "ADMIN" %>
+	<%= f.check_box :admin %>
+	<%end%>
 	
 
 	<% if user.new_record? %>
