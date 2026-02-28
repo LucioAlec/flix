@@ -10,13 +10,13 @@ class Movie < ApplicationRecord
 
   has_one_attached :main_image
 
-  validates :title, presence: true, uniqueness: true
+  validates :title,  presence: true, uniqueness: true
   validates :slug, uniqueness: true
   validates :released_on, :duration, presence: true
   validates :description, length: { minimum: 25 }
   validates :total_gross, numericality: { greater_than_or_equal_to: 0 }
-
   validate :acceptable_image
+  
 
   RATINGS = %w[G PG PG-13 R NC-17]
   validates :rating, inclusion: { in: RATINGS }
@@ -48,7 +48,7 @@ class Movie < ApplicationRecord
   end
 
   def to_param
-  slug
+    slug
   end
 
   def upcoming?
