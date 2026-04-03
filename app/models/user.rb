@@ -10,7 +10,7 @@ class User < ApplicationRecord
   validates :name, presence: true
   validates :slug, uniqueness: true
 
-  validates :email, format: { with: /\A#{URI::MailTo::EMAIL_REGEXP}\z/ }, uniqueness: { case_sensitive: false }
+  validates :email, presence: true, format: { with: /\A#{URI::MailTo::EMAIL_REGEXP}\z/ }, uniqueness: { case_sensitive: false }
   validates :password, length: { minimum: 10, allow_blank: true }
 
   validates :username, presence: true, format: { with: /\A[A-Z0-9]+\z/i }, uniqueness: { case_sensitive: false }
@@ -25,6 +25,7 @@ class User < ApplicationRecord
   def format_username
     self.username = username.downcase
   end
+
   def format_email
     self.email = email.downcase
   end
@@ -36,6 +37,6 @@ class User < ApplicationRecord
   private
 
   def set_slug
-    self.slug= username.parameterize
+    self.slug = username.parameterize
   end
 end

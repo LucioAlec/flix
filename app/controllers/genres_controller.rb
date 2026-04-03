@@ -17,6 +17,7 @@ class GenresController < ApplicationController
 
   def create
     @genre = Genre.new(genre_params)
+
     if @genre.save
       redirect_to @genre, notice: "Genre created!"
     else

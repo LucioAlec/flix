@@ -1,11 +1,21 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  title: MyString
-  rating: MyString
+  title: Captain Marvel
+  rating: PG-13
   total_gross: 9.99
+  description: Carol Danvers becomes one of the universe's most p...
+  released_on: 2019-03-08
+  director: Anna Boden
+  duration: 124min
+  slug: captain-marvel
 
 two:
-  title: MyString
-  rating: MyString
-  total_gross: 9.99
+  title: Hulk
+  rating: PG
+  total_gross: 100009.99
+  description: Nickolas Cage becomes one of the city's most p...
+  released_on: 2017-07-02
+  director: Jorge O Pexerico
+  duration: 131min
+  slug: hulk

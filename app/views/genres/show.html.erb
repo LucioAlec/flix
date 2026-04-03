@@ -2,7 +2,7 @@
   <ul> 
     <h2> <%= "#{@genre.name}'s movies" %> </h2>
     <% @movies.each do |m| %>
-      <li><%= link_to m.title, m) %> </li>
+      <li><%= link_to m.title, m %> </li>
     <% end %>
   </ul>
 <% else %>

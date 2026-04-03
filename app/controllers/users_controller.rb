@@ -20,6 +20,7 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    @user.admin = false
     if @user.save
       session[:user_id] = @user.id
       redirect_to @user, notice: "User sucessfully created!!!"
@@ -33,6 +34,10 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(user_params)
+      if current_user_admin? && params[:user].key?[:admin]
+        @user.admin = params[:user][:admin]
+        @user.save
+      end
       redirect_to @user, notice: "Account successfully updated!"
     else
       render :edit, status: :unprocessable_entity
@@ -53,13 +58,12 @@ class UsersController < ApplicationController
 
 
     private
-    def user_params 
-      allowed =[:name, :username, :email, :password, :password_confirmation]
-      allowed << :admin if current_user&.admin?
-      params.require(:user).permit(*allowed)
-
+    def user_params
+      params.require(:user).permit(
+        :name, :username, :email, :password, :password_confirmation
+        )
     end
-
+    
     def require_correct_user
       redirect_to root_url, status: :see_other unless current_user?(@user) || current_user.admin?
     end

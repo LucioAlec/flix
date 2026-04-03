@@ -9,11 +9,9 @@ module MoviesHelper
 
   def upcoming_or_total_gross(movie)
     movie.upcoming? ? "Upcoming..." : total_gross(movie)
-     
   end
 
   def year_of(movie)
-    # movie.released_on.strftime("%Y")
     movie.released_on.year
   end
 
@@ -34,7 +32,7 @@ module MoviesHelper
   end
 
   def main_image(movie)
-    if movie.main_image.attached? 
+    if movie.main_image.attached?
       image_tag movie.main_image
     else
       image_tag "placeholder.png"

@@ -3,6 +3,7 @@
     <h4>Genres</h4>
     <ul>
       <% @genres.each do |g| %>
+        
         <li><%= link_to g.name, g%></li>
       <% end %>
     </ul>

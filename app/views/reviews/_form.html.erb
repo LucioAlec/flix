@@ -1,17 +1,18 @@
-  <%= render "shared/errors", object: review %>
+<%= render "shared/errors", object: review %>
+
 <%= form_with(model:[movie, review]) do |f| %>
 
-<div class="legend">Stars</div>
+  <div class="legend">Stars</div>
 
-<% Review::STARS.each do |star| %>
-  <span class="star">
-    <%= f.radio_button :stars, star %>
-    <%= f.label :stars, star, value: star %>
-  </span>
-<% end %>
+  <% Review::STARS.each do |star| %>
+    <span class="star">
+      <%= f.radio_button :stars, star %>
+      <%= f.label :stars, star, value: star %>
+    </span>
+  <% end %>
 
-    <%= f.label :comment %>
-    <%= f.text_area :comment, placeholder: "What did you think?" %>
+  <%= f.label :comment %>
+  <%= f.text_area :comment, placeholder: "What did you think?" %>
 
   <%= f.submit(review.persisted? ? "Update Review" : "Post Review") %>
-    <% end %>
+<% end %>

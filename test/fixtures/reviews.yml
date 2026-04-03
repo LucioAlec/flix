@@ -1,13 +1,14 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  stars: 1
-  comment: MyText
+  stars: 3
+  comment: Nice movie
   movie: one
+  user: one
 
 two:
-  name: MyString
-  stars: 1
-  comment: MyText
+  stars: 5
+  comment: My favorite movie!
   movie: two
+  user: two
+

@@ -3,17 +3,20 @@ class FavoritesController < ApplicationController
   before_action :set_movie
 
   def create
-  @movie.favorites.create!(user: current_user)
-  # or append to the through association
-  # @movie.fans << current_user
-  redirect_to @movie
+    favorite = @movie.favorites.find_or_initialize_by(user: current_user)
+
+    if favorite.persisted? || favorite.save
+      redirect_to @movie, notice: "Movie added to favorites."
+    else
+      redirect_to @movie, alert: "Could not add movie to favorites."
+    end
   end
 
   def destroy
     favorite = current_user.favorites.find(params[:id])
     favorite.destroy
 
-    redirect_to @movie
+    redirect_to @movie, notice: "Movie removed from favorites."
   end
 
   private

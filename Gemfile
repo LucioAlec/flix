@@ -7,7 +7,7 @@ gem "propshaft"
 #
 gem "cssbundling-rails", "~> 1.4"
 # Use sqlite3 as the database for Active Record
-group :development, :test do 
+group :development, :test do
 gem "sqlite3", ">= 2.1"
 end
 group :production do
@@ -52,7 +52,8 @@ gem "thruster", require: false
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+  # gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+  gem "byebug", "~> 9.0", ">= 9.0.6"
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", ">= 7.1.2",  require: false
@@ -70,4 +71,5 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem "simplecov", require: false, group: :test
 end

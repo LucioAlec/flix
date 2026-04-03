@@ -16,7 +16,6 @@ class Movie < ApplicationRecord
   validates :description, length: { minimum: 25 }
   validates :total_gross, numericality: { greater_than_or_equal_to: 0 }
   validate :acceptable_image
-  
 
   RATINGS = %w[G PG PG-13 R NC-17]
   validates :rating, inclusion: { in: RATINGS }
@@ -33,10 +32,7 @@ class Movie < ApplicationRecord
 
 
   def flop?
-    unless reviews.count >= 0 && average_stars >= 4
-      (total_gross.blank? || total_gross < 100_000_000)
-    end
-    # total_gross.blank? || total_gross < 225_000_000 && average(:stars) >= 4 && reviews.count
+   (total_gross.blank? || total_gross < 100_000_000) && average_stars < 4
   end
 
   def self.recently_added
@@ -58,13 +54,12 @@ class Movie < ApplicationRecord
   private
 
   def acceptable_image
-
     return unless main_image.attached?
     unless main_image.blob.byte_size <= 1.megabyte
     errors.add(:main_image, "is too big")
     end
 
-    acceptable_types = ["image/jpeg", "image/png"]
+    acceptable_types = [ "image/jpeg", "image/png" ]
     unless acceptable_types.include?(main_image.blob.content_type)
       errors.add(:main_image, "must be a JPEG or PNG")
     end
@@ -74,3 +69,9 @@ class Movie < ApplicationRecord
     self.slug=title.parameterize
   end
 end
+
+
+# died flop?
+# unless reviews.count >= 0 && average_stars >= 4
+#  (total_gross.blank? || total_gross < 100_000_000)
+# end
