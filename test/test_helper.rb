@@ -1,10 +1,12 @@
 ENV["RAILS_ENV"] ||= "test"
+# require "minitest/autorun"
 require "simplecov"
 SimpleCov.start do
   add_filter "/config/"
 end
 require_relative "../config/environment"
 require "rails/test_help"
+require "minitest/rails"
 
 
 
@@ -17,5 +19,6 @@ module ActiveSupport
     fixtures :all
 
     # Add more helper methods to be used by all tests here...
+    # extend Minitest::Spec::DSL
   end
 end
