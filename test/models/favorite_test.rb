@@ -1,6 +1,6 @@
 require "test_helper"
 
-class FavoriteTest < ActiveSupport::TestCase
+describe Favorite do
   def setup
     @user = User.create!(
       name: "Allec",
