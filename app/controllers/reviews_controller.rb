@@ -17,18 +17,12 @@ class ReviewsController < ApplicationController
     @review = @movie.reviews.new(review_params)
     @review.user = current_user
 
-
     if @review.save
       redirect_to movie_reviews_path(@movie),
                   notice: "Thanks for your review!"
     else
       render :new, status: :unprocessable_entity
     end
-  end
-
-  def destroy
-    @review.destroy
-    redirect_to movie_reviews_path(@movie), status: :see_other, notice: "Review deleted!"
   end
 
   def edit
@@ -40,6 +34,11 @@ class ReviewsController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+  
+  def destroy
+    @review.destroy
+    redirect_to movie_reviews_path(@movie), status: :see_other, notice: "Review deleted!"
   end
 
 

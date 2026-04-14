@@ -14,5 +14,5 @@ two:
   email: user2@example.com
   slug: user2
   password_digest: <%= BCrypt::Password.create("password456") %>
-  admin: true
+  admin: false
 

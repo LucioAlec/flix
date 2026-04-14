@@ -40,7 +40,7 @@ describe SessionsController do
       assert_response :success
     end
 
-    test "Should not sign with incorret password" do
+    test "Should not sign with incorrect password" do
       user = users(:one)
 
       post "/session", params: {
@@ -68,11 +68,12 @@ describe SessionsController do
 
       post "/session", params: {
         email_or_username: user.email,
-        password: "password1234"
+        password: "password123"
       }
 
       delete session_path
-      assert_redirected_to movies_path
+      assert_response :redirect
+      assert_redirected_to movies_url
       assert_response :see_other
       assert_nil session[:user_id]
       assert_equal "You're now signed out!", flash[:alert]
