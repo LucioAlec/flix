@@ -35,7 +35,7 @@ class ReviewsController < ApplicationController
       render :edit, status: :unprocessable_entity
     end
   end
-  
+
   def destroy
     @review.destroy
     redirect_to movie_reviews_path(@movie), status: :see_other, notice: "Review deleted!"

@@ -21,10 +21,9 @@ require "test_helper"
     end
 
   describe "New" do
-
     test "Should only a admin can access a new genre page" do
       user = users(:one)
-      post session_path, params: { email_or_username: user.email, password: "password123"}
+      post session_path, params: { email_or_username: user.email, password: "password123" }
 
       get new_genre_path
       assert_response :success
@@ -32,9 +31,9 @@ require "test_helper"
 
     test "Should non admin can not access a new genre page" do
       user = users(:two)
-      
 
-      post session_path, params: { email_or_username:  user.email, password: "password123"}
+
+      post session_path, params: { email_or_username:  user.email, password: "password123" }
 
       get new_genre_path
 
@@ -47,14 +46,13 @@ require "test_helper"
     end
   end
 
-  describe "Create" do 
-
+  describe "Create" do
     test "should only admin create a genre" do
       user = users(:one)
       post session_path, params: { email_or_username: user.email, password: "password123" }
 
       assert_difference("Genre.count", 1) do
-        post genres_path, params: { genre: {name: "Horror"}}
+        post genres_path, params: { genre: { name: "Horror" } }
       end
 
       assert_response :redirect
@@ -65,7 +63,7 @@ require "test_helper"
       post session_path, params: { email_or_username: user.email, password: "password123" }
 
       assert_no_difference("Genre.count") do
-        post genres_path, params: { genre: {name: ""}}
+        post genres_path, params: { genre: { name: "" } }
       end
 
       assert_response :unprocessable_entity
@@ -73,54 +71,52 @@ require "test_helper"
 
     test "should non admin can not create a genre" do
       user = users(:two)
-      
+
       post session_path, params: { email_or_username: user.email, password: "password123" }
 
-      post genres_path, params: { genre: {name: "Horror"}}
+      post genres_path, params: { genre: { name: "Horror" } }
 
-      assert_response :redirect 
+      assert_response :redirect
       assert_redirected_to movies_path
-      
+
       follow_redirect!
 
-      assert_match "Unauthorized access", response.body 
+      assert_match "Unauthorized access", response.body
     end
   end
 
   describe "Edit" do
-    test "Should admin can access edit page" do 
+    test "Should admin can access edit page" do
       user = users(:one)
       genre = genres(:one)
 
-      post session_path, params: {email_or_username: user.email, password: "password123"}
+      post session_path, params: { email_or_username: user.email, password: "password123" }
 
-      get edit_review_path(genre.slug)
+      get edit_genre_path(genre.slug)
       assert_response :success
     end
 
-    test "Should  non admin cannot access edit page" do 
+    test "Should  non admin cannot access edit page" do
       user = users(:two)
       genre = genres(:one)
 
-      post session_path, params: {email_or_username: user.email, password: "password123"}
+      post session_path, params: { email_or_username: user.email, password: "password123" }
 
       get edit_genre_path(genre.slug)
       assert_response :redirect
       follow_redirect!
       assert_match "Unauthorized access", response.body
     end
-
   end
 
   describe "Update" do
-
     test "Should non admin can not update a genre" do
       user = users(:two)
       genre = genres(:one)
 
-      post session_path, params: {email_or_username: user.email, password: "password123"}
+      post session_path, params: { email_or_username: user.email, password: "password123" }
 
-      patch genre_path(genre.slug), params: { genre: {name: "Updated genre"}}
+      patch genre_path(genre.slug), params: { genre: { name: "Updated genre" } }
       assert_response :redirect
       follow_redirect!
       assert_match "Unauthorized access", response.body
@@ -130,9 +126,9 @@ require "test_helper"
       user = users(:one)
       genre = genres(:one)
 
-      post session_path, params: {email_or_username: user.email, password: "password123"}
+      post session_path, params: { email_or_username: user.email, password: "password123" }
 
-      patch genre_path(genre.slug), params: { genre: {name: "Updated genre"}}
+      patch genre_path(genre.slug), params: { genre: { name: "Updated genre" } }
       assert_response :redirect
       genre.reload
       assert_equal "Updated genre", genre.name
@@ -142,33 +138,33 @@ require "test_helper"
       user = users(:one)
       genre = genres(:one)
 
-      post session_path, params: {email_or_username: user.email, password: "password123"}
+      post session_path, params: { email_or_username: user.email, password: "password123" }
 
-      patch genre_path(genre.slug), params: { genre: {name: ""}}
+      patch genre_path(genre.slug), params: { genre: { name: "" } }
 
       assert_response :unprocessable_entity
       assert_equal "Genre Unccessfully updated", flash.now[:alert]
     end
   end
-  
-  describe "destroy" do 
+
+  describe "destroy" do
     test "Should only admin can delete a genre" do
       user = users(:one)
       genre = genres(:one)
 
-      post session_path, params: {email_or_username: user.email, password: "password123"}
+      post session_path, params: { email_or_username: user.email, password: "password123" }
 
       assert_difference("Genre.count", -1) do
       delete genre_path(genre.slug)
       end
       assert_redirected_to genres_path
     end
-    
+
     test "Should non admin can not delete a genre" do
       user = users(:two)
       genre = genres(:one)
 
-      post session_path, params: {email_or_username: user.email, password: "password123"}
+      post session_path, params: { email_or_username: user.email, password: "password123" }
 
       assert_no_difference("Genre.count") do
       delete genre_path(genre.slug)

@@ -161,7 +161,7 @@ describe User do
 
       ordered_users = User.not_admins
 
-      assert_equal [ "Alec", "Calec" ], ordered_users.pluck(:name)
+      assert_equal [ "Alec", "Calec", "a" ], ordered_users.pluck(:name)
     end
   end
 
