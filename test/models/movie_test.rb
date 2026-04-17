@@ -4,16 +4,6 @@ describe Movie do
 
   def setup
     @movie = movies(:captainmarvel)
-=begin    @movie = Movie.new( #chamar fixture
-      title: "D&A",
-      rating: "PG-13",
-      total_gross: 1000000000.0,
-      description: "A true love history about two pombinhos...",
-      released_on: "2022-05-27",
-      director: "Us",
-      duration: "127min"
-    )
-=end
   end
 
   describe "Validations" do
@@ -39,7 +29,7 @@ describe Movie do
   end
 
   describe "Scopes" do
-    test "Should returns only movies already released" do # trocar para fixtures
+    test "Should returns only movies already released" do 
       released_movie = movies(:hulk)
       upcoming_movie = movies(:spider6)
 
@@ -65,9 +55,7 @@ describe Movie do
       boring2 = movies(:boringdays2)
 
       assert_equal 2, Movie.recent(2).count
-      # array para comparar o result com pluck
       assert_equal [ happy, boring2 ], Movie.recent(2)
-      # assert_equal [ "Alec", "Calec", "a" ], ordered_users.pluck(:name)
     end
 
     test "hits" do
@@ -161,7 +149,7 @@ describe Movie do
       assert_includes @movie.errors[:main_image], "must be a JPEG or PNG"
     end
 
-    test "Should return average review" do # fixture
+    test "Should return average review" do 
       captain = movies(:captainmarvel)
       reviews(:one)
       reviews(:three)
