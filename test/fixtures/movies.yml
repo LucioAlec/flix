@@ -1,21 +1,75 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  title: Captain Marvel
-  rating: PG-13
-  total_gross: 9.99
-  description: Carol Danvers becomes one of the universe's most p...
-  released_on: 2019-03-08
-  director: Anna Boden
-  duration: 124min
-  slug: captain-marvel
-
-two:
+hulk:
   title: Hulk
   rating: PG
-  total_gross: 100009.99
+  total_gross: 400000000
   description: Nickolas Cage becomes one of the city's most p...
   released_on: 2017-07-02
   director: Jorge O Pexerico
   duration: 131min
   slug: hulk
+  
+captainmarvel:
+  title: Captain Marvel
+  rating: PG-13
+  total_gross: 300000001
+  description: Carol Danvers becomes one of the universe's most p...
+  released_on: 2019-03-08
+  director: Anna Boden
+  duration: 124min
+  slug: captain-marvel
+  
+boringdays: 
+  title: Boring days
+  rating: PG
+  total_gross: 224000000
+  description: boring becomes one of the city's most p...
+  released_on: 2021-09-09
+  director: quaqua 
+  duration: 111min
+  slug: boring-days
+
+boringdays2:
+  title: Boring days 2
+  rating: PG
+  total_gross: 50000000
+  description: boring becomes one of the city's most p...
+  released_on: 2023-09-09
+  director: quaqua 
+  duration: 111min
+  slug: boring-days-2
+
+happyday:
+  title: Happy days
+  rating: PG
+  total_gross: 789000000
+  description: Happy becomes one of the days most p...
+  released_on: 2024-09-09
+  director: quaqua 
+  duration: 111min
+  slug: happy-days
+
+michaeljackson: 
+  title: Michael Jackson
+  rating: PG
+  total_gross: 0
+  description: KING OF POP becomes one of the city's most p...
+  released_on: 2026-09-09
+  director: rusbe 
+  duration: 111min
+  slug: michael-jackson
+
+spider6: 
+  title: Spider6
+  rating: PG
+  total_gross: 0
+  description: Spider spider becomes one of the city's most p...
+  released_on: 2031-07-02
+  director: Tom
+  duration: 111min
+  slug: spider6
+
+
+
+

@@ -3,12 +3,28 @@
 one:
   stars: 3
   comment: Nice movie
-  movie: one
+  movie: captainmarvel
   user: one
 
 two:
   stars: 5
   comment: My favorite movie!
-  movie: two
+  movie: hulk
   user: two
+
+three:
+  stars: 5
+  comment: My favorite movie!
+  movie: captainmarvel
+  user: two
+
+four:
+  stars: 1
+  comment: I didnt like it!
+  movie: boringdays2
+  user: two
+
+
+
+
 

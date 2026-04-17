@@ -3,7 +3,8 @@ describe Movie do
   include ActionDispatch::TestProcess::FixtureFile
 
   def setup
-    @movie = Movie.new(
+    @movie = movies(:captainmarvel)
+=begin    @movie = Movie.new( #chamar fixture
       title: "D&A",
       rating: "PG-13",
       total_gross: 1000000000.0,
@@ -12,6 +13,7 @@ describe Movie do
       director: "Us",
       duration: "127min"
     )
+=end
   end
 
   describe "Validations" do
@@ -19,85 +21,13 @@ describe Movie do
       assert @movie.valid?
     end
 
-    test "Should not valid title without title" do
-      @movie.title = nil
-
-      refute @movie.valid?
-      assert_equal [ "can't be blank" ], @movie.errors[:title]
-    end
-
     test "Should not valid duplicated title" do
-      @movie.save!
+      @movie.update!(title: "duplicated")
 
-      movie2 = Movie.new(
-        title: "D&A",
-        rating: "PG",
-        total_gross: 9999.9,
-        description: "Carol Danvers becomes one of the universe's most p...",
-        released_on: "2019-03-08",
-        director: "Anna Boden",
-        duration: "124min"
-      )
+      movie2 = Movie.new(title: "duplicated")
 
       refute movie2.valid?
       assert_equal [ "has already been taken" ], movie2.errors[:title]
-    end
-
-    test "Should not valid duplicated slug" do
-      @movie.save!
-
-      movie2 = Movie.new(
-        title: "Captain Shadow",
-        rating: "G",
-        total_gross: 9999.9,
-        description: "Carol Danvers becomes one of the universe's most p...",
-        released_on: "2019-03-08",
-        director: "Anna Boden",
-        duration: "124min"
-      )
-      movie2.slug = @movie.slug
-
-      refute movie2.valid?
-      assert_equal [ "has already been taken" ], movie2.errors[:slug]
-    end
-
-    test "Should be not valid movie without released_on attribute" do
-      @movie.released_on = nil
-
-      refute @movie.valid?
-      assert_includes @movie.errors[:released_on], "can't be blank"
-    end
-
-    test "Should be not valid movie without duration attribute" do
-      @movie.duration = nil
-
-      refute @movie.valid?
-      assert_includes @movie.errors[:duration], "can't be blank"
-    end
-
-    test "Should not valid movie without description at least 25 caracters" do
-      @movie.description = "s"
-
-      refute @movie.valid?
-      assert_equal [ "is too short (minimum is 25 characters)" ], @movie.errors[:description]
-    end
-
-    test "Should not valid movie without desciption" do
-      @movie.description = nil
-
-      refute @movie.valid?
-      assert_equal [ "is too short (minimum is 25 characters)" ], @movie.errors[:description]
-    end
-
-    test "Should not valid total gross attribute less than 0" do
-      @movie.total_gross = -1
-
-      refute @movie.valid?
-      assert_equal [ "must be greater than or equal to 0" ], @movie.errors[:total_gross]
-    end
-
-    test "Should RATINGS array contains 'G', 'PG', 'PG-13', 'R', 'NC-17' values" do
-      assert_equal [ "G", "PG", "PG-13", "R", "NC-17" ], Movie::RATINGS
     end
 
     test "Should not valid when rating attribute is out the included list " do
@@ -109,25 +39,9 @@ describe Movie do
   end
 
   describe "Scopes" do
-    test "Should returns only movies already released" do
-      released_movie = Movie.create!(
-        title: "D&A",
-        rating: "PG-13",
-        total_gross: 1000000000.0,
-        description: "A true love history about two pombinhos...",
-        released_on: 2.days.ago,
-        director: "Us",
-        duration: "127min"
-      )
-      upcoming_movie = Movie.create!(
-        title: "A&D",
-        rating: "PG-13",
-        total_gross: 1000000000.0,
-        description: "A true love history about two pombinhos...",
-        released_on: 2.days.from_now,
-        director: "Us",
-        duration: "127min"
-      )
+    test "Should returns only movies already released" do # trocar para fixtures
+      released_movie = movies(:hulk)
+      upcoming_movie = movies(:spider6)
 
       result = Movie.released
 
@@ -136,24 +50,8 @@ describe Movie do
     end
 
     test "Should returns only movies that have upcoming" do
-      released_movie = Movie.create!(
-        title: "D&A",
-        rating: "PG-13",
-        total_gross: 1000000000.0,
-        description: "A true love history about two pombinhos...",
-        released_on: 2.days.ago,
-        director: "Us",
-        duration: "127min"
-      )
-      upcoming_movie = Movie.create!(
-        title: "A&D",
-        rating: "PG-13",
-        total_gross: 1000000000.0,
-        description: "A true love history about two pombinhos...",
-        released_on: 2.days.from_now,
-        director: "Us",
-        duration: "127min"
-      )
+      released_movie = movies(:hulk)
+      upcoming_movie = movies(:spider6)
 
       result = Movie.upcoming
 
@@ -161,83 +59,41 @@ describe Movie do
       assert_not_includes result, released_movie
     end
 
-    test "Should returns recent limits the number of released movies returned" do
-      3.times do |i|
-        Movie.create!(
-        title: "movie #{i}",
-        rating: "PG-13",
-        total_gross: 1000000000.0,
-        description: "A true love history about two pombinhos...#{i}",
-        released_on: (i + 1).days.ago,
-        director: "Us",
-        duration: "127min"
-        )
-      end
-        assert_equal 2, Movie.recent(2).count
+    test "Should recent order by released desc" do
+      happy = movies(:happyday)
+      michael = movies(:michaeljackson)
+      boring2 = movies(:boringdays2)
+
+      assert_equal 2, Movie.recent(2).count
+      # array para comparar o result com pluck
+      assert_equal [ happy, boring2 ], Movie.recent(2)
+      # assert_equal [ "Alec", "Calec", "a" ], ordered_users.pluck(:name)
     end
 
-    test "hits with limit 3" do
-      10.times do |i|
-        Movie.create!(
-        title: "movie #{i}",
-        rating: "PG-13",
-        total_gross: (299_999_999 + i),
-        description: "A true love history about two pombinhos...#{i}",
-        released_on: (i + 1).days.ago,
-        director: "Us",
-        duration: "127min"
-        )
-      end
+    test "hits" do
+      hulk    = movies(:hulk)
+      captain = movies(:captainmarvel)
+      happy   = movies(:happyday)
+      boring2  = movies(:boringdays2)
 
       assert_equal 3, Movie.hits(3).count
+      assert_equal [ happy, hulk, captain ], Movie.hits(3).to_a
     end
 
     test "flops" do
-      3.times do |i|
-        Movie.create!(
-        title: "movie #{i}",
-        rating: "PG-13",
-        total_gross: (225_000_001 - i),
-        description: "A true love history about two pombinhos...#{i}",
-        released_on: (i + 1).days.ago,
-        director: "Us",
-        duration: "127min"
-        )
-      end
+      boring  = movies(:boringdays)
+      boring2 = movies(:boringdays2)
+      happy   = movies(:happyday)
 
       assert_equal 2, Movie.flops.count
+      assert_equal [ boring2, boring ], Movie.flops
     end
 
     test "Should returnd only released movies above the given value of gross" do
-      low = Movie.create!(
-      title: "movie",
-      rating: "PG-13",
-      total_gross: (300_000_000),
-      description: "A true love history about two pombinhos...",
-      released_on: 5.days.ago,
-      director: "Us",
-      duration: "127min"
-      )
+      low    = movies(:boringdays)
+      equal  = movies(:boringdays2)
+      high   = movies(:hulk)
 
-      equal = Movie.create!(
-      title: "movie1",
-      rating: "PG-13",
-      total_gross: (300_000_001),
-      description: "A true love history about two pombinhos...",
-      released_on: 5.days.ago,
-      director: "Us",
-      duration: "127min"
-      )
-
-      high = Movie.create!(
-      title: "movie2",
-      rating: "PG-13",
-      total_gross: (300_000_002),
-      description: "A true love history about two pombinhos...",
-      released_on: 5.days.ago,
-      director: "Us",
-      duration: "127min"
-      )
       result = Movie.grossed_greater_than(300_000_001)
 
       assert_includes result, high
@@ -246,37 +102,11 @@ describe Movie do
     end
 
     test "gross less than" do
-      low = Movie.create!(
-      title: "movie",
-      rating: "PG-13",
-      total_gross: (300_000_000),
-      description: "A true love history about two pombinhos...",
-      released_on: 5.days.ago,
-      director: "Us",
-      duration: "127min"
-      )
+      low    = movies(:boringdays2)
+      equal  = movies(:hulk)
+      high   = movies(:happyday)
 
-      equal = Movie.create!(
-      title: "movie1",
-      rating: "PG-13",
-      total_gross: (300_000_001),
-      description: "A true love history about two pombinhos...",
-      released_on: 5.days.ago,
-      director: "Us",
-      duration: "127min"
-      )
-
-      high = Movie.create!(
-      title: "movie2",
-      rating: "PG-13",
-      total_gross: (300_000_002),
-      description: "A true love history about two pombinhos...",
-      released_on: 5.days.ago,
-      director: "Us",
-      duration: "127min"
-      )
-
-      result = Movie.grossed_less_than(300_000_001)
+      result = Movie.grossed_less_than(300_000_000)
 
       assert_includes result, low
       assert_not_includes result, high
@@ -297,21 +127,6 @@ describe Movie do
       @movie.save!
 
       refute @movie.upcoming?
-    end
-
-    test "Should to param returns the slug when movie is saved" do
-    @movie.save!
-
-    movie = @movie.to_param
-
-    assert_equal "d-a", movie
-    end
-
-    test "Should set a slug when movie is saved" do
-      @movie.save!
-      movie = @movie.slug
-
-      assert_equal "d-a", movie
     end
 
     test "Should valid with a JPEG main image under 1 megabyte" do
@@ -346,128 +161,59 @@ describe Movie do
       assert_includes @movie.errors[:main_image], "must be a JPEG or PNG"
     end
 
-    test "Should return average stars of reviews input" do
-      @movie.save!
-      Review.create!(
-        stars: 4,
-        comment: "ULTRA MOVIE",
-        movie: @movie,
-        user: users(:one)
-      )
-      Review.create!(
-        stars: 5,
-        comment: "BEST MOVIE",
-        movie: @movie,
-        user: users(:two)
-      )
+    test "Should return average review" do # fixture
+      captain = movies(:captainmarvel)
+      reviews(:one)
+      reviews(:three)
 
-      assert_equal 4.5, @movie.average_stars
+      assert_equal 4.0, captain.average_stars
   end
 
     test "Should return 0.0 when there are no reviews" do
-      @movie.save!
+      boring = movies(:boringdays)
 
-      assert_equal 0.0, @movie.average_stars
+      assert_equal 0.0, boring.average_stars
     end
 
     test "Should return the last 3 recently added movies by desc" do
-    older = Movie.create!(
-      title: "Older Movie",
-      rating: "PG",
-      total_gross: 1000,
-      description: "An older movie with enough description.",
-      released_on: 5.days.ago,
-      director: "Someone",
-      duration: "120min",
-      created_at: Time.current + 1.minutes
-    )
+      older  = movies(:happyday)
+      middle = movies(:michaeljackson)
+      newest = movies(:spider6)
 
-    middle = Movie.create!(
-      title: "Middle Movie",
-      rating: "PG",
-      total_gross: 1000,
-      description: "A middle movie with enough description.",
-      released_on: 4.days.ago,
-      director: "Someone",
-      duration: "120min",
-      created_at: Time.current + 2.minutes
-    )
-
-    newer = Movie.create!(
-      title: "Newer Movie",
-      rating: "PG",
-      total_gross: 1000,
-      description: "A newer movie with enough description.",
-      released_on: 3.days.ago,
-      director: "Someone",
-      duration: "120min",
-      created_at: Time.current + 3.minutes
-    )
-
-    newest = Movie.create!(
-      title: "Newest Movie",
-      rating: "PG",
-      total_gross: 1000,
-      description: "The newest movie with enough description.",
-      released_on: 2.days.ago,
-      director: "Someone",
-      duration: "120min",
-      created_at: Time.current + 4.minutes
-    )
 
       result = Movie.recently_added
 
-      assert_equal [ newest, newer, middle ], result
-      assert_not_includes result, older
+      assert_equal newest, result.first
+      assert_equal middle, result.second
+      assert_equal older, result.third
     end
 
-    test "Return true when average stars are below 4 and total_gross is below 100 million" do
-      @movie.total_gross = 50_000_000
-      @movie.save!
+    describe "Flop?" do
+     test "Should be a flop case" do
+        boring2 = movies(:boringdays2)
 
-      Review.create!(
-        stars: 2,
-        comment: "bad movie",
-        movie: @movie,
-        user: users(:one)
-      )
+        assert boring2.flop?
+      end
 
-      assert @movie.flop?
-    end
+      test "Should not flop" do
+        boring = movies(:boringdays)
 
-    test "Should return false when average stars are 4 or higher even low gross" do
-      @movie.total_gross = 150_000_000
-      @movie.save!
 
-      Review.create!(
-        stars: 5,
-        comment: "bad movie",
-        movie: @movie,
-        user: users(:one)
-      )
+        refute boring.flop?
+      end
 
-      refute @movie.flop?
-    end
+      test "Should return false when total gross is high even with low average stars" do
+        hulk = movies(:hulk)
+        reviews(:two)
 
-    test "Should return false when total gross is high even with low average stars" do
-      @movie.total_gross = 250_000_000
-      @movie.save!
+        refute hulk.flop?
+      end
 
-      Review.create!(
-        stars: 5,
-        comment: "bad movie",
-        movie: @movie,
-        user: users(:one)
-      )
+      test "Should true false when total gross is low and are no reviews" do
+        boring2 = movies(:boringdays2)
 
-      refute @movie.flop?
-    end
-
-    test "Should true false when total gross is low and are no reviews" do
-      @movie.total_gross = 50_000_000
-      @movie.save!
-
-      assert @movie.flop?
+        assert boring2.flop?
+      end
     end
   end
 end

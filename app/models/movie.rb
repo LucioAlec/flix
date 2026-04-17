@@ -24,8 +24,9 @@ class Movie < ApplicationRecord
   scope :upcoming, -> { where("released_on > ?", Time.now).order(released_on: :asc) }
   scope :recent, ->(max = 5) { released.limit(max) }
 
-  scope :hits, ->(max = 3) { released.where("total_gross >= 300_000_000").order(total_gross: :desc).limit(max) }
-  scope :flops, -> { released.where("total_gross < 22500000").order(total_gross: :asc) }
+  scope :hits, ->(max = 3) { released.where("total_gross >= 300_000_000").reorder(total_gross: :desc).
+                            limit(max) }
+  scope :flops, -> { released.where("total_gross < 225_000_000").order(total_gross: :asc) }
 
   scope :grossed_greater_than, ->(gross) { released.where("total_gross > ?", gross) }
   scope :grossed_less_than, ->(gross) { released.where("total_gross < ?", gross) }
@@ -35,12 +36,13 @@ class Movie < ApplicationRecord
    (total_gross.blank? || total_gross < 100_000_000) && average_stars < 4
   end
 
+
   def self.recently_added
-    order("created_at desc").limit(3)
+    order("released_on desc").limit(3)
   end
 
   def average_stars
-    reviews.average(:stars) || 0.0
+    reviews.average(:stars).to_f || 0.0
   end
 
   def to_param

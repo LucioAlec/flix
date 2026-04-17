@@ -1,10 +1,10 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  movie: one
-  genre: one
+  movie: captainmarvel
+  genre: scifi
 
 two:
-  movie: two
-  genre: two
+  movie: hulk
+  genre: drama
 
