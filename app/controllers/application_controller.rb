@@ -18,6 +18,12 @@ class ApplicationController < ActionController::Base
   end
   helper_method :current_user
 
+  def current_user_admin?
+    current_user && current_user.admin?
+  end
+
+  helper_method :current_user_admin?
+
   def require_admin
     unless current_user_admin?
       redirect_to movies_url, alert: "Unauthorized access"
@@ -27,12 +33,6 @@ class ApplicationController < ActionController::Base
   def require_admin_or_current_user
     redirect_to root_url, status: :see_other unless current_user_admin? || current_user?(@user)
   end
-
-  def current_user_admin?
-    current_user && current_user.admin?
-  end
-
-  helper_method :current_user_admin?
 
   def current_user?(user)
     current_user == user

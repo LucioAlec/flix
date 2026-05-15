@@ -3,8 +3,8 @@ require "test_helper"
 class CharacterizationTest < ActiveSupport::TestCase
    test "Should is valid when has movie and genre" do
      characterization = Characterization.new(
-      movie: movies(:one),
-      genre: genres(:one)
+      movie: movies(:hulk),
+      genre: genres(:scifi)
      )
 
      assert characterization.valid?
@@ -13,7 +13,7 @@ class CharacterizationTest < ActiveSupport::TestCase
    test "Should is not valid without movie" do
      characterization = Characterization.new(
       movie: nil,
-      genre: genres(:one)
+      genre: genres(:scifi)
      )
 
      refute characterization.valid?
@@ -22,7 +22,7 @@ class CharacterizationTest < ActiveSupport::TestCase
 
    test "Should is not valid without genre" do
      characterization = Characterization.new(
-      movie: movies(:one),
+      movie: movies(:hulk),
       genre: nil
      )
 

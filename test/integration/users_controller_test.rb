@@ -1,15 +1,14 @@
 require "test_helper"
-# redirect_to new_session_url, alert: "Please, you must to sign in first!"
 describe UsersController do
   describe "Index" do
    test "Should only admin can access the index users page." do
     skip
      get users_path
-     assert_match "a", "#{users(:two).name}"
+     assert_match "a", "#{users(:lucio).name}"
    end
 
    test "Should non admin cannot access the index users page." do
-    user = users(:two)
+    user = users(:lucio)
 
     post session_path, params: { email_or_username: user.email, password: "password456" }
 

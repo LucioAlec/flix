@@ -1,43 +1,41 @@
 require "test_helper"
-
   describe GenresController do
-    test "should get genres index" do
+  describe "Index" do
+    it "should get genres index" do
       get genres_path
       assert_response :success
       assert_select "h4", "Genres"
-      assert_select "li", "#{genres(:one).name}"
-      assert_select "li", "#{genres(:two).name}"
+      assert_select "li", "#{genres(:scifi).name}"
+      assert_select "li", "#{genres(:drama).name}"
     end
+  end
 
-    test "should show genre" do
-      genre = genres(:one)
+  describe "Show" do
+    it "should show genre" do
+      genre = genres(:scifi)
       movie = genre.movies.first
 
-      get genre_path(genre.slug)
+      get genre_path(genre)
       assert_response :success
 
       assert_select "h2", "#{genre.name}'s movies"
       assert_select "li", "#{movie.title}"
     end
+  end
 
   describe "New" do
-    test "Should only a admin can access a new genre page" do
-      user = users(:one)
-      post session_path, params: { email_or_username: user.email, password: "password123" }
+    it "Should only a admin can access a new genre page" do
+      sign_in_as_admin
 
       get new_genre_path
       assert_response :success
     end
 
-    test "Should non admin can not access a new genre page" do
-      user = users(:two)
-
-
-      post session_path, params: { email_or_username:  user.email, password: "password123" }
+    it "Should non admin can not access a new genre page" do
+      sign_in_as_non_admin
 
       get new_genre_path
 
-      assert_response :redirect
       assert_redirected_to movies_path
 
       follow_redirect!
@@ -47,20 +45,19 @@ require "test_helper"
   end
 
   describe "Create" do
-    test "should only admin create a genre" do
-      user = users(:one)
-      post session_path, params: { email_or_username: user.email, password: "password123" }
+    it "should only admin create a genre" do
+      sign_in_as_admin
 
       assert_difference("Genre.count", 1) do
         post genres_path, params: { genre: { name: "Horror" } }
       end
 
       assert_response :redirect
+      assert_redirected_to genre_path(Genre.last), notice: "Genre created!"
     end
 
-    test "should not create a genre with invalid data" do
-      user = users(:one)
-      post session_path, params: { email_or_username: user.email, password: "password123" }
+    it "should not create a genre with invalid data" do
+      sign_in_as_admin
 
       assert_no_difference("Genre.count") do
         post genres_path, params: { genre: { name: "" } }
@@ -69,78 +66,70 @@ require "test_helper"
       assert_response :unprocessable_entity
     end
 
-    test "should non admin can not create a genre" do
-      user = users(:two)
+    it "should non admin can not create a genre" do
+      sign_in_as_non_admin
 
-      post session_path, params: { email_or_username: user.email, password: "password123" }
+      assert_no_difference("Genre.count") do
+        post genres_path, params: { genre: { name: "Horror" } }
+      end
 
-      post genres_path, params: { genre: { name: "Horror" } }
-
-      assert_response :redirect
       assert_redirected_to movies_path
-
-      follow_redirect!
-
-      assert_match "Unauthorized access", response.body
     end
   end
 
   describe "Edit" do
-    test "Should admin can access edit page" do
-      user = users(:one)
-      genre = genres(:one)
+    it "Should admin can access edit page" do
+      sign_in_as_admin
+      genre = genres(:scifi)
 
-      post session_path, params: { email_or_username: user.email, password: "password123" }
 
-      get edit_genre_path(genre.slug)
+      get edit_genre_path(genre)
       assert_response :success
     end
 
-    test "Should  non admin cannot access edit page" do
-      user = users(:two)
-      genre = genres(:one)
+    it "Should  non admin cannot access edit page" do
+      sign_in_as_non_admin
+      genre = genres(:scifi)
 
-      post session_path, params: { email_or_username: user.email, password: "password123" }
-
-      get edit_genre_path(genre.slug)
-      assert_response :redirect
+      get edit_genre_path(genre)
+      assert_redirected_to movies_url
       follow_redirect!
       assert_match "Unauthorized access", response.body
     end
   end
 
   describe "Update" do
-    test "Should non admin can not update a genre" do
-      user = users(:two)
-      genre = genres(:one)
+    it "Should non admin can not update a genre" do
+      sign_in_as_non_admin
+      genre = genres(:scifi)
 
-      post session_path, params: { email_or_username: user.email, password: "password123" }
+      assert_no_changes -> { genre.reload.name } do
+        patch genre_path(genre), params: { genre: { name: "Updated genre" } }
+      end
 
-      patch genre_path(genre.slug), params: { genre: { name: "Updated genre" } }
-      assert_response :redirect
+      assert_redirected_to movies_url
       follow_redirect!
       assert_match "Unauthorized access", response.body
     end
 
-    test "Should only admin can update a genre" do
-      user = users(:one)
-      genre = genres(:one)
+    it "Should only admin can update a genre" do
+      sign_in_as_admin
+      genre = genres(:scifi)
 
-      post session_path, params: { email_or_username: user.email, password: "password123" }
+      patch genre_path(genre), params: { genre: { name: "Updated genre" } }
 
-      patch genre_path(genre.slug), params: { genre: { name: "Updated genre" } }
-      assert_response :redirect
       genre.reload
+      assert_redirected_to genre_path(genre)
       assert_equal "Updated genre", genre.name
     end
 
-    test "Should not update with invalid data" do
-      user = users(:one)
-      genre = genres(:one)
+    it "Should not update with invalid data" do
+      sign_in_as_admin
+      genre = genres(:scifi)
 
-      post session_path, params: { email_or_username: user.email, password: "password123" }
-
-      patch genre_path(genre.slug), params: { genre: { name: "" } }
+      assert_no_changes -> { genre.reload.name } do
+        patch genre_path(genre), params: { genre: { name: "" } }
+      end
 
       assert_response :unprocessable_entity
       assert_equal "Genre Unccessfully updated", flash.now[:alert]
@@ -148,40 +137,61 @@ require "test_helper"
   end
 
   describe "destroy" do
-    test "Should only admin can delete a genre" do
-      user = users(:one)
-      genre = genres(:one)
-
-      post session_path, params: { email_or_username: user.email, password: "password123" }
+    it "Should only admin can delete a genre" do
+      sign_in_as_admin
+      genre = genres(:scifi)
 
       assert_difference("Genre.count", -1) do
-      delete genre_path(genre.slug)
+      delete genre_path(genre)
       end
       assert_redirected_to genres_path
     end
 
-    test "Should non admin can not delete a genre" do
-      user = users(:two)
-      genre = genres(:one)
-
-      post session_path, params: { email_or_username: user.email, password: "password123" }
+    it "Should non admin can not delete a genre" do
+      sign_in_as_non_admin
+      genre = genres(:scifi)
 
       assert_no_difference("Genre.count") do
-      delete genre_path(genre.slug)
+      delete genre_path(genre)
       end
 
-      assert_response :redirect
+      assert_redirected_to movies_url
       follow_redirect!
       assert_match "Unauthorized access", response.body
     end
 
-    test "Should guest can not delete a genre" do
-      genre = genres(:one)
+    it "Should guest can not delete a genre" do
+      genre = genres(:scifi)
 
       assert_no_difference("Genre.count") do
-        delete genre_path(genre.slug)
+        delete genre_path(genre)
       end
         assert_redirected_to movies_path
     end
   end
+
+  private
+
+    def admin
+      @admin ||= users(:alec)
+    end
+
+    def non_admin
+      @non_admin ||= users(:lucio)
+    end
+
+    def sign_in_as(user, password:)
+      post session_path, params: {
+        email_or_username: user.email,
+        password: password
+      }
+    end
+
+    def sign_in_as_admin
+      sign_in_as(admin, password: "password123")
+    end
+
+    def sign_in_as_non_admin
+      sign_in_as(non_admin, password: "password456")
+    end
 end

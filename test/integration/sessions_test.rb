@@ -11,7 +11,7 @@ describe SessionsController do
 
   describe "Creating sesion" do
     test "Should sign with valid email" do
-      user = users(:one)
+      user = users(:alec)
 
       post "/session", params: {
         email_or_username: user.email,
@@ -27,7 +27,7 @@ describe SessionsController do
     end
 
     test "Should sign with valid username" do
-      user = users(:one)
+      user = users(:alec)
 
       post "/session", params: {
         email_or_username: user.username,
@@ -41,7 +41,7 @@ describe SessionsController do
     end
 
     test "Should not sign with incorrect password" do
-      user = users(:one)
+      user = users(:alec)
 
       post "/session", params: {
         email_or_username: user.email,
@@ -64,7 +64,7 @@ describe SessionsController do
 
   describe "Destroying session" do
     test "Should logout" do
-      user = users(:one)
+      user = users(:alec)
 
       post "/session", params: {
         email_or_username: user.email,

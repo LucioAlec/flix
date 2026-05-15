@@ -1,18 +1,27 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: b
-  username: user1
-  email: user1@example.com
-  slug: user1
+alec:
+  name: Alec
+  username: alec
+  email: alec@example.com
+  slug: alec
   password_digest: <%= BCrypt::Password.create("password123") %>
   admin: true
 
-two:
-  name: a
-  username: user2
-  email: user2@example.com
-  slug: user2
+lucio:
+  name: Lucio
+  username: lucio
+  email: lucio@example.com
+  slug: lucio
   password_digest: <%= BCrypt::Password.create("password456") %>
   admin: false
+
+Balec:
+  name: Balec
+  username: balec
+  email: balec@example.com
+  slug: balec
+  password_digest: <%= BCrypt::Password.create("password456") %>
+  admin: false
+
 

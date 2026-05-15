@@ -4,25 +4,25 @@ one:
   stars: 3
   comment: Nice movie
   movie: captainmarvel
-  user: one
+  user: alec
 
 two:
   stars: 5
   comment: My favorite movie!
   movie: hulk
-  user: two
+  user: lucio
 
 three:
   stars: 5
   comment: My favorite movie!
   movie: captainmarvel
-  user: two
+  user: lucio
 
 four:
   stars: 1
   comment: I didnt like it!
   movie: boringdays2
-  user: two
+  user: lucio
 
 
 
