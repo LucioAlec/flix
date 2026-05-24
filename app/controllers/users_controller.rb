@@ -34,7 +34,7 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(user_params)
-      if current_user_admin? && params[:user].key?[:admin]
+      if current_user_admin? && params[:user].key?(:admin)
         @user.admin = params[:user][:admin]
         @user.save
       end
@@ -49,10 +49,11 @@ class UsersController < ApplicationController
     @user.destroy
     reset_session if deleting_self
     if deleting_self
-      redirect_to root_url, status: :see_other, notice: "Account successfully deleted!"
+      redirect_to root_url, status: :see_other,
+                  notice: "Account successfully deleted!"
     else
       redirect_to users_url, status: :see_other,
-      alert: "Account sucessfully deleted!"
+      alert: "Account successfully deleted!"
     end
   end
 
@@ -65,7 +66,8 @@ class UsersController < ApplicationController
     end
 
     def require_correct_user
-      redirect_to root_url, status: :see_other unless current_user?(@user) || current_user.admin?
+      redirect_to root_url,
+        status: :see_other unless current_user?(@user) || current_user.admin?
     end
 
     def set_user
