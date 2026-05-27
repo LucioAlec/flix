@@ -1,7 +1,7 @@
 class MoviesController < ApplicationController
-  before_action :require_signin, except: [ :index, :show          ]
-  before_action :require_admin,  except: [ :index, :show          ]
-  before_action :set_movie,      only: %i[show edit update destroy]
+  before_action :require_signin, except: [  :index, :show           ]
+  before_action :require_admin,  except: [  :index, :show           ]
+  before_action :set_movie,      only: %i[  show edit update destroy]
 
   def index
     @movies = Movie.public_send(movies_filter)
@@ -16,6 +16,22 @@ class MoviesController < ApplicationController
     end
   end
 
+  def new
+    @movie = Movie.new
+  end
+
+  def create
+    @movie = Movie.new(movie_params)
+
+    if @movie.save
+      redirect_to @movie
+      flash.now[:notice] = "Movie successufully created! WOW"
+    else
+      flash.now[:alert] = "Movie unsuccessfully created!"
+      render :new, status: :unprocessable_entity
+    end
+  end
+
   def edit ; end
 
   def update
@@ -26,25 +42,11 @@ class MoviesController < ApplicationController
     end
   end
 
-  def new
-    @movie = Movie.new
-  end
-
-  def create
-    @movie = Movie.new(movie_params)
-
-    if @movie.save
-      redirect_to @movie
-    else
-      flash.now[:alert] = "Movie unsuccessfully created!"
-      render :new, status: :unprocessable_entity
-    end
-  end
-
   def destroy
     @movie.destroy
 
-    redirect_to movies_url, status: :see_other, danger: "Movie successfully deleted!"
+    redirect_to movies_url, status: :see_other,
+                            danger: "Movie successfully deleted!"
   end
 
 
@@ -53,7 +55,8 @@ class MoviesController < ApplicationController
   def movie_params
     params.require(:movie)
       .permit(:title, :description, :rating,
-               :director, :duration, :main_image, :released_on, :total_gross, genre_ids: [])
+              :director, :duration, :main_image, :released_on,
+              :total_gross, genre_ids: [])
   end
 
   def set_movie
