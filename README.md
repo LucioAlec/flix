@@ -136,6 +136,17 @@ Run Brakeman:
 ```bash
 brakeman
 ```
+## Continuous Integration
+
+This project uses GitHub Actions to automatically run:
+
+- Rails test suite
+- System tests
+- RuboCop linting
+- Brakeman security scan
+- Importmap audit
+
+The CI workflow runs on pull requests and pushes to the `main` branch.
 
 ## Getting Started
 
