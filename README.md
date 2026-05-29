@@ -1,5 +1,7 @@
 # Movie Catalog App
 
+![CI](https://github.com/LucioAlec/flix/actions/workflows/ci.yml/badge.svg)
+
 A full-stack Ruby on Rails application for browsing, managing and reviewing movies.
 
 This project allows users to sign up, sign in, browse movies, write reviews, favorite movies and explore movies by genre. Admin users can manage movies, genres and users through protected CRUD actions.
